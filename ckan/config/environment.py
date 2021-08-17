@@ -182,6 +182,22 @@ def update_config():
         if from_env:
             config[option] = from_env
 
+    # Override service URLs with test alternatives if running the tests
+    if os.environ.get('CKAN_TESTING'):
+        TEST_CONFIG_FROM_ENV_VARS = {
+            'ckan.site_id': 'TEST_CKAN_SITE_ID',
+            'sqlalchemy.url': 'TEST_CKAN_SQLALCHEMY_URL',
+            'ckan.datastore.write_url': 'TEST_CKAN_DATASTORE_WRITE_URL',
+            'ckan.datastore.read_url': 'TEST_CKAN_DATASTORE_READ_URL',
+            'ckan.redis.url': 'TEST_CKAN_REDIS_URL',
+            'solr_url': 'TEST_CKAN_SOLR_URL',
+        }
+
+        for option in TEST_CONFIG_FROM_ENV_VARS:
+            from_env = os.environ.get(TEST_CONFIG_FROM_ENV_VARS[option], None)
+            if from_env:
+                config[option] = from_env
+
     root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
     site_url = config.get('ckan.site_url', '')

@@ -15,6 +15,12 @@ import time
 class CkanNose(Plugin):
     settings = None
 
+    def begin(self):
+        os.environ['CKAN_TESTING'] = 'True'
+
+    def finalize(self):
+        os.environ.pop('CKAN_TESTING', None)
+
     def startContext(self, ctx):
         # import needs to be here or setup happens too early
         import ckan.model as model
